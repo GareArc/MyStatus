@@ -1,3 +1,9 @@
+# Local serevr file for testing only.
+server/*
+
+
+# IDEA
+.idea/*
 # Compiled class file
 *.class
 
