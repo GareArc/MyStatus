@@ -1,13 +1,13 @@
 package com.mystatus;
 
+import com.mystatus.application.IoCFactory;
 import com.mystatus.application.RESTApplication;
+import com.mystatus.application.ServerManager;
 import com.mystatus.application.listeners.LoginListener;
-import com.mystatus.application.services.LoginCountService;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.restlet.Component;
 import org.restlet.data.Protocol;
-import org.restlet.Restlet;
 
 public class MyStatus extends JavaPlugin {
 
@@ -17,6 +17,7 @@ public class MyStatus extends JavaPlugin {
      * */
     @Override
     public void onEnable() {
+        IoCFactory.getInstance().getServerManager().setMyPlugin(this);
         getServer().getPluginManager().registerEvents(new LoginListener(), this);
 
         getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Plugin enabled.");

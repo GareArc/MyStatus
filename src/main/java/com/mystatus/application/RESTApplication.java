@@ -1,7 +1,8 @@
 package com.mystatus.application;
 
-import com.mystatus.application.resources.LoginResource;
-import com.mystatus.application.resources.PapiResource;
+import com.mystatus.application.resources.admin.WhiteListResource;
+import com.mystatus.application.resources.papi.PapiPlayerResource;
+import com.mystatus.application.resources.papi.PapiServerResource;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.resource.ServerResource;
@@ -17,9 +18,9 @@ public class RESTApplication extends Application {
     }
 
     private void setUpRouter(Router router){
-        registerPath(router, "/logincount", LoginResource.class);
-        registerPath(router, "/papi/server/{placeholder}", PapiResource.class);
-        registerPath(router, "/papi/player/{uuid}/{placeholder}", PapiResource.class);
+        registerPath(router, "/papi/server/{placeholder}", PapiServerResource.class);
+        registerPath(router, "/papi/player/{uuid}/{placeholder}", PapiPlayerResource.class);
+        registerPath(router, "/admin/whitelist/{username}", WhiteListResource.class);
     }
 
     private void registerPath(Router router, String path,
