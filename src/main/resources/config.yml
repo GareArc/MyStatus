@@ -1,0 +1,7 @@
+# Server settings
+port: 7850
+prefix: api
+
+# Admin settings
+adminPass: admin
+ownerPass: owner

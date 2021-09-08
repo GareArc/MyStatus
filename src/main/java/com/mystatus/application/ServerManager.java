@@ -1,15 +1,20 @@
 package com.mystatus.application;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.springframework.stereotype.Component;
 
-@Component
 public class ServerManager {
-    private Server server;
+    private final Server server;
     private Plugin myPlugin = null;
+    private static ServerManager instance = null;
+
+    public static ServerManager getInstance(){
+        if(instance == null) instance = new ServerManager();
+        return instance;
+    }
 
     private ServerManager(){
         server = Bukkit.getServer();
@@ -35,5 +40,9 @@ public class ServerManager {
         }catch (Exception e){
             return false;
         }
+    }
+
+    public String getPlaceHolderResult(String txt, Player p){
+        return PlaceholderAPI.setPlaceholders(p, "%" + txt + "%");
     }
 }

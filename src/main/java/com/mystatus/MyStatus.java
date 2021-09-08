@@ -1,9 +1,9 @@
 package com.mystatus;
 
-import com.mystatus.application.IoCFactory;
 import com.mystatus.application.RESTApplication;
 import com.mystatus.application.ServerManager;
-import com.mystatus.application.listeners.LoginListener;
+import com.mystatus.application.config.ConfigHandler;
+import com.mystatus.application.listeners.Login;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.restlet.Component;
@@ -17,8 +17,14 @@ public class MyStatus extends JavaPlugin {
      * */
     @Override
     public void onEnable() {
-        IoCFactory.getInstance().getServerManager().setMyPlugin(this);
-        getServer().getPluginManager().registerEvents(new LoginListener(), this);
+        getServer().getPluginManager().registerEvents(new Login(),  this);
+
+
+        // ConfigHandler
+        ConfigHandler.getInstance().setupConfig(this);
+
+        // Server Manager
+        ServerManager.getInstance().setMyPlugin(this);
 
         getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Plugin enabled.");
         try{
@@ -41,11 +47,11 @@ public class MyStatus extends JavaPlugin {
      * */
     public void start() throws Exception {
         Component component = new Component();
+        ConfigHandler configHandler = ConfigHandler.getInstance();
 
-        // Default port is 7850.  Will be configurable in the future.
-        component.getServers().add(Protocol.HTTP, 7850);
-        // Default prefix is "api". Will be configurable in the future.
-        component.getDefaultHost().attach("/" + "api", new RESTApplication());
+        component.getServers().add(Protocol.HTTP, configHandler.getIntegerConfig("port"));
+
+        component.getDefaultHost().attach("/" + configHandler.getStringConfig("prefix"), new RESTApplication());
 
         // Start
         component.start();

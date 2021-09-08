@@ -1,14 +1,16 @@
 package com.mystatus.application.resources.papi;
 
+import com.mystatus.application.ServerManager;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.restlet.resource.Get;
+import org.restlet.resource.ServerResource;
 
-public class PapiServerResource extends PapiResource {
+public class PapiServerResource extends ServerResource {
 
-    @Get("txt")
+    @Get
     public String getPlaceHolder(){
         String placeHolderStr = getAttribute("placeholder");
-        return PlaceholderAPI.setPlaceholders(null, buildPlaceHolderStr(placeHolderStr));
+        return ServerManager.getInstance().getPlaceHolderResult(placeHolderStr, null);
     }
 
 }
