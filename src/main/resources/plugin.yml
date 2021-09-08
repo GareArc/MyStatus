@@ -4,3 +4,5 @@ author: Gare_TH
 main: com.mystatus.MyStatus
 api-version: 1.17
 description: A REST api plugin.
+depend:
+  - PlaceholderAPI

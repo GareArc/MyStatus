@@ -1,11 +1,8 @@
 package com.mystatus.application.services;
 
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
 
 public class LoginCountService {
     private int count = 0;
@@ -22,9 +19,12 @@ public class LoginCountService {
         count++;
     }
 
-    @Get
     public Representation getCount(){
         return new JacksonRepresentation<>(count);
+    }
+
+    public String getServerName(){
+        return PlaceholderAPI.setPlaceholders(null, "%server_name%");
     }
 
 }

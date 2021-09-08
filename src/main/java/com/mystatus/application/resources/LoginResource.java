@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
 public class LoginResource extends ServerResource {
@@ -15,6 +16,11 @@ public class LoginResource extends ServerResource {
     public Representation getLoginCount(){
 //        return 1;
         return LoginCountService.getInstance().getCount();
+    }
+
+    @Post("txt")
+    public String getServerName(){
+        return LoginCountService.getInstance().getServerName();
     }
 
 }
