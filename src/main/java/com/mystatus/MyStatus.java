@@ -3,7 +3,6 @@ package com.mystatus;
 import com.mystatus.application.RESTApplication;
 import com.mystatus.application.ServerManager;
 import com.mystatus.application.config.ConfigHandler;
-import com.mystatus.application.listeners.Login;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.restlet.Component;
@@ -17,9 +16,6 @@ public class MyStatus extends JavaPlugin {
      * */
     @Override
     public void onEnable() {
-        getServer().getPluginManager().registerEvents(new Login(),  this);
-
-
         // ConfigHandler
         ConfigHandler.getInstance().setupConfig(this);
 
