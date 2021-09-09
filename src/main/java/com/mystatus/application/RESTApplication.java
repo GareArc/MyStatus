@@ -19,8 +19,9 @@ public class RESTApplication extends Application {
 
     private void setUpRouter(Router router){
         registerPath(router, "/papi/server/{placeholder}", PapiServerResource.class);
-        registerPath(router, "/papi/player/{uuid}/{placeholder}", PapiPlayerResource.class);
+        registerPath(router, "/papi/player/{username}/{placeholder}", PapiPlayerResource.class);
         registerPath(router, "/admin/whitelist/{username}", WhiteListResource.class);
+        registerPath(router, "/admin/whitelist/{auth}/{username}", WhiteListResource.class);
     }
 
     private void registerPath(Router router, String path,
