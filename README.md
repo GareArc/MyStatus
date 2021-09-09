@@ -2,6 +2,7 @@
 MyStatus is a REST plugin for PaperMC minecraft servers .
 
 ## API List
++ /api is default path, you can change it in config.yml, as well as port.
 
 ### - PAPI
 
