@@ -13,12 +13,14 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class PapiPlayerResource extends ServerResource {
+public class PapiPlayerNameResource extends ServerResource {
 
     @Get
     public String getPlaceHolder(){
         String username = getAttribute("username");
         String placeHolderStr = getAttribute("placeholder");
+        if(username == null || placeHolderStr == null) return "Bad Request";
+
         OfflinePlayer p = getTarget(username);
         if(p == null){
             return "Player not exist or currently in the respawn event.";

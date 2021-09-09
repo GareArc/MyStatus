@@ -14,13 +14,15 @@ MyStatus is a REST plugin for PaperMC minecraft servers .
 
 Method | API | Description
 :---|:---|:---
-GET | /api/papi/server/{placeholder} | Get server info using proper placeholder.
-GET | /api/papi/player/{username}/{placeholder} | Get player info using proper placeholder. 
+GET | /api/papi/server/{placeholder} | Get server info using placeholder.
+GET | /api/papi/player/{username}/{placeholder} | Get player info using placeholder with name. 
+GET | /api/papi/player/uuid/{uuid}/{placeholder} | Get player info using placeholder with uuid.
 
 ```text
 Examples:
-1. /api/papi/server/server_name => A Minecraft Server
+1. /api/papi/server/server_name => A Minecraft Server.
 2. /api/papi/player/Gare_TH/player_name => Gare_TH
+3. /api/papi/player/uuid/87143f9f-b764-47f7-b00b-4c96f65ee83a/player_name => Gare_TH
 ```
 
 ### - Admin
@@ -37,7 +39,7 @@ POST | /api/admin/whitelist/{auth}/{username} | Add a player into whitelist. Aut
 ```text
 Examples:
 1. /api/admin/whitelist/Gare_TH => true
-2. /api/admin/whitelist/aaa => false
-3. /api/admin/whitelist/admin/KEKW => succeed
-4. /api/admin/whitelist/admin/KEKW => Player already in whitelist
+2. /api/admin/whitelist/SomeoneNotInWhiteList => false
+3. /api/admin/whitelist/adminPass/KEKW => succeed
+4. /api/admin/whitelist/adminPass/KEKW => Player already in whitelist
 ```
