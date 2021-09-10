@@ -7,7 +7,7 @@ adminPass: admin
 ownerPass: owner
 
 # JDBC settings(MySQL)
-DB_URL: localhost
+DB_Server: localhost
 DB_Port: 23333
 DB_Name: MyStatusDB
 DB_Params: useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8
