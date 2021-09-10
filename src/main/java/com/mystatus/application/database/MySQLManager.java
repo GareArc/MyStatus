@@ -11,7 +11,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class MySQLManager {
-    QueryRunner runner;
+    private final QueryRunner runner;
+    private static MySQLManager instance = null;
 
     private MySQLManager(){
         // MySQL 8.0 +
@@ -23,6 +24,11 @@ public class MySQLManager {
         dataSource.setUser(cf.getStringConfig("DB_Username"));
         dataSource.setPassword(cf.getStringConfig("DB_Password"));
         runner = new QueryRunner(dataSource);
+    }
+
+    public static MySQLManager getInstance(){
+        if(instance == null) instance = new MySQLManager();
+        return instance;
     }
 
     public<T> List<T> SelectQuery(String sql, Class<T> tClass , Object... args) throws SQLException {
