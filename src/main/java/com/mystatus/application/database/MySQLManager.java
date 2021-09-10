@@ -31,23 +31,14 @@ public class MySQLManager {
         return instance;
     }
 
-    public<T> List<T> SelectQuery(String sql, Class<T> tClass , Object... args) throws SQLException {
+    public<T> List<T> selectQuery(String sql, Class<T> tClass , Object... args) throws SQLException {
         ResultSetHandler<List<T>> h = new BeanListHandler<>(tClass);
         return runner.query(sql, h, args);
     }
-
-    public<T> int UpdateQuery(String sql, Class<T> tClass , Object... args) throws SQLException {
+    
+    public int modifyQuery(String sql, Object... args) throws SQLException {
         return runner.update(sql, args);
     }
-
-    public<T> int InsertQuery(String sql, Class<T> tClass , Object... args) throws SQLException {
-        return UpdateQuery(sql, tClass, args);
-    }
-
-    public<T> int DeleteQuery(String sql, Class<T> tClass , Object... args) throws SQLException {
-        return UpdateQuery(sql, tClass, args);
-    }
-
 
     private String getDBUrl(ConfigHandler cf){
         String localurl = cf.getStringConfig("DB_URL");
