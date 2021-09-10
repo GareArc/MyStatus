@@ -1,163 +1,54 @@
 package com.mystatus.application.database;
 
+import com.mysql.cj.jdbc.MysqlDataSource;
 import com.mystatus.application.config.ConfigHandler;
+import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.ResultSetHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
 
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
-import java.sql.*;
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
 public class MySQLManager {
-    private final String driver = "com.mysql.cj.jdbc.Driver"; // MySQL 8.0 +
-    private final String serverUrl;
-    private final String port;
-    private final String dbname;
-    private final String params;
-    private final String username;
-    private final String password;
-    private Connection connection = null;
-    private boolean hasConnected = false;
-    private static MySQLManager instance = null;
+    QueryRunner runner;
 
-    private MySQLManager() {
-        serverUrl = ConfigHandler.getInstance().getStringConfig("DB_URL");
-        port = ConfigHandler.getInstance().getStringConfig("DB_Port");
-        dbname = ConfigHandler.getInstance().getStringConfig("DB_Name");
-        params = ConfigHandler.getInstance().getStringConfig("DB_Params");
-        username = ConfigHandler.getInstance().getStringConfig("DB_Username");
-        password = ConfigHandler.getInstance().getStringConfig("DB_Password");
-        connectToDataBase();
+    private MySQLManager(){
+        // MySQL 8.0 +
+        String driver = "com.mysql.cj.jdbc.Driver";
+        DbUtils.loadDriver(driver);
+        ConfigHandler cf = ConfigHandler.getInstance();
+        MysqlDataSource dataSource = new MysqlDataSource();
+        dataSource.setURL(getDBUrl(cf));
+        dataSource.setUser(cf.getStringConfig("DB_Username"));
+        dataSource.setPassword(cf.getStringConfig("DB_Password"));
+        runner = new QueryRunner(dataSource);
     }
 
-    public static MySQLManager getInstance(){
-        if(instance == null) instance = new MySQLManager();
-        return instance;
+    public<T> List<T> SelectQuery(String sql, Class<T> tClass , Object... args) throws SQLException {
+        ResultSetHandler<List<T>> h = new BeanListHandler<>(tClass);
+        return runner.query(sql, h, args);
     }
 
-
-    /**
-     * Perform ADD, DELETE and MODIFY operations.
-     * */
-    public int updateBySQL(String sql, List<Object> params) {
-        if(!hasConnected || sql == null) return -1;
-
-        PreparedStatement pst = null;
-        int updateCount = 0;
-
-        try {
-            pst = connection.prepareStatement(sql);
-            if(params != null && !params.isEmpty()){
-                for(int i=0;i< params.size(); i++){
-                    pst.setObject(i+1, params.get(i)); // mysql index starts from 1.
-                }
-            }
-            // Perform operation
-            updateCount = pst.executeUpdate();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }finally {
-            release(null, pst, null);
-        }
-        return updateCount;
-
+    public<T> int UpdateQuery(String sql, Class<T> tClass , Object... args) throws SQLException {
+        return runner.update(sql, args);
     }
 
-    public<T> T getSingleResult(String sql, List<Object> objects, Class<T> tClass){
-        T object = null;
-        try{
-            ResultSet resultSet = setupPreparedStatement(sql, objects);
-            if(resultSet.next()){
-                object = getObject(resultSet, tClass);
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return object;
+    public<T> int InsertQuery(String sql, Class<T> tClass , Object... args) throws SQLException {
+        return UpdateQuery(sql, tClass, args);
     }
 
-    public<T> List<T> getMultiResults(String sql, List<Object> objects, Class<T> tClass){
-        List<T> tList = new ArrayList<>();
-        try{
-            ResultSet resultSet = setupPreparedStatement(sql, objects);
-            while(resultSet.next()){
-                T object = getObject(resultSet, tClass);
-                tList.add(object);
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return tList;
-    }
-
-    private<T> T getObject(ResultSet resultSet, Class<T> tClass) throws Exception {
-        T object = tClass.getDeclaredConstructor().newInstance();
-        ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-        for(int i = 0; i < resultSetMetaData.getColumnCount(); i++){
-            // Get column name
-            String colName = resultSetMetaData.getColumnName(i + 1); // MySQL index starts from 1.
-            PropertyDescriptor pd = new PropertyDescriptor(colName, tClass);
-            Method method = pd.getWriteMethod();
-            method.invoke(object, resultSet.getObject(colName));
-        }
-        return object;
-    }
-
-    private ResultSet setupPreparedStatement(String sql, List<Object> objects){
-        PreparedStatement pst = null;
-        ResultSet resultSet = null;
-        try {
-            pst = connection.prepareStatement(sql);
-            if (objects != null && !objects.isEmpty()) {
-                for (int i = 0; i < objects.size(); i++) {
-                    pst.setObject(i + 1, objects.get(i));
-                }
-            }
-            resultSet = pst.executeQuery();
-        }catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            release(null, pst, null);
-        }
-        return resultSet;
-    }
-
-    private void release(Connection connection, Statement statement, ResultSet resultSet){
-        try {
-            if(resultSet != null){
-                resultSet.close();
-            }
-            if(statement != null){
-                statement.close();
-            }
-            if(connection != null){
-                connection.close();
-            }
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-    }
-
-    private String getDBURL(){
-        return "jdbc:mysql://" + serverUrl + ':' + port + '/' + dbname + '?' + params;
-    }
-
-    private void connectToDataBase(){
-        try{
-            Class.forName(driver);
-            connection = DriverManager.getConnection(getDBURL(), username, password);
-        }catch(Exception e){
-            e.printStackTrace();
-            return;
-        }
-        hasConnected = true;
+    public<T> int DeleteQuery(String sql, Class<T> tClass , Object... args) throws SQLException {
+        return UpdateQuery(sql, tClass, args);
     }
 
 
-
+    private String getDBUrl(ConfigHandler cf){
+        String localurl = cf.getStringConfig("DB_URL");
+        String port = cf.getStringConfig("DB_Port");
+        String dbname = cf.getStringConfig("DB_Name");
+        String params = cf.getStringConfig("DB_Params");
+        return "jdbc:mysql://" + localurl + ':' + port + '/' + dbname + '?' + params;
+    }
 
 }
