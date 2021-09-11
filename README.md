@@ -33,13 +33,13 @@ Examples:
 
 Method | API | Description
 :---|:---|:---
-GET | /api/admin/whitelist/{username} | Check if a player is in whitelist.\[True \ False\] 
+GET | /api/admin/whitelist/{uuid} | Check if a player is in whitelist.\[True \ False\] 
 POST | /api/admin/whitelist/{auth}/{username} | Add a player into whitelist. Authentication required.
 
 ```text
 Examples:
-1. /api/admin/whitelist/Gare_TH => true
-2. /api/admin/whitelist/SomeoneNotInWhiteList => false
+1. /api/admin/whitelist/87143f9f-b764-47f7-b00b-4c96f65ee83a => true
+2. /api/admin/whitelist/33191dea-5750-4952-a09f-6e9bbe641d80 => false
 3. /api/admin/whitelist/adminPass/KEKW => succeed
 4. /api/admin/whitelist/adminPass/KEKW => Player already in whitelist
 ```
