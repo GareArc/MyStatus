@@ -21,6 +21,7 @@ public class MySQLManager {
         String driver = "com.mysql.cj.jdbc.Driver";
         DbUtils.loadDriver(driver);
         runner = new QueryRunner(getDataSource());
+        createEcoTable();
     }
 
     public static MySQLManager getInstance(){
@@ -28,15 +29,29 @@ public class MySQLManager {
         return instance;
     }
 
+    /**
+     * Perform CREATE table, database(schema) operations.
+     * */
     public void createQuery(String sql) throws SQLException {
         runner.update(sql);
     }
 
+    /**
+     * Perform SELECT operations. SQL hide VALUE info with "?" symbol.
+     * @see <a href="https://commons.apache.org/proper/commons-dbutils/examples.html">DbUtils</a>.
+     * @param tClass Return object class type.
+     * @param args replace "?" in SQL.
+     * */
     public<T> List<T> selectQuery(String sql, Class<T> tClass , Object... args) throws SQLException {
         ResultSetHandler<List<T>> h = new BeanListHandler<>(tClass);
         return runner.query(sql, h, args);
     }
-    
+
+    /**
+     * Perform INSERT, UPDATE and DELETE operations.
+     * @see <a href="https://commons.apache.org/proper/commons-dbutils/examples.html">DbUtils</a>.
+     * @param args replace "?" in SQL.
+     * */
     public int modifyQuery(String sql, Object... args) throws SQLException {
         return runner.update(sql, args);
     }
@@ -59,14 +74,13 @@ public class MySQLManager {
         return dataSource;
     }
 
-    // Will be moved to other class.
-    private void createTable(){
-        if(tableExists("mystatusdb")) return;
-        String sql = "CREATE TABLE mystatusdb (" +
+    public void createEcoTable(){
+        if(tableExists(Tables.ECO.getName())) return;
+        String sql = "CREATE TABLE " + Tables.ECO.getName() + " ( " +
                 "  id INT NOT NULL AUTO_INCREMENT," +
                 "  item VARCHAR(45) NULL," +
                 "  count INT NULL," +
-                "  price DECIMAL(10, 2) NULL," +
+                "  price DOUBLE NULL," +
                 "  player VARCHAR(45) NULL," +
                 "  type ENUM('buy', 'sell') NULL," +
                 "  owner VARCHAR(45) NULL," +

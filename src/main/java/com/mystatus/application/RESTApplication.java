@@ -1,6 +1,6 @@
 package com.mystatus.application;
 
-import com.mystatus.application.resources.admin.CustomStatusService;
+import com.mystatus.application.exception.CustomStatusService;
 import com.mystatus.application.resources.admin.WhiteListResource;
 import com.mystatus.application.resources.papi.PapiPlayerNameResource;
 import com.mystatus.application.resources.papi.PapiPlayerUUIDResource;

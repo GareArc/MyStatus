@@ -1,6 +1,5 @@
-package com.mystatus.application.resources.admin;
+package com.mystatus.application.exception;
 
-import org.bukkit.Bukkit;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.Status;

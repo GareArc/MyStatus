@@ -1,6 +1,7 @@
 package com.mystatus.application.resources.admin;
 
 import com.mystatus.application.ServerManager;
+import com.mystatus.application.exception.CustomException;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.restlet.resource.Get;
@@ -14,7 +15,7 @@ public class WhiteListResource extends ServerResource {
     private final AdminUtil adminUtil = new AdminUtil();
 
     @Post
-    public String addWhiteList() throws CustomException{
+    public String addWhiteList() throws CustomException {
         String username = getAttribute("username");
         String auth = getAttribute("auth");
 

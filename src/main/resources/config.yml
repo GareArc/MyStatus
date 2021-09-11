@@ -8,7 +8,7 @@ ownerPass: owner
 
 # JDBC settings(MySQL)
 DB_Server: localhost
-DB_Port: 23333
-DB_Name: MyStatusDB
+DB_Port: 3306
+DB_Name: test
 DB_Username: root
 DB_Password: root

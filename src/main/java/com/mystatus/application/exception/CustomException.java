@@ -1,8 +1,5 @@
-package com.mystatus.application.resources.admin;
+package com.mystatus.application.exception;
 
-import org.restlet.resource.Status;
-
-@Status(value = 10001)
 public class CustomException extends RuntimeException{
     public CustomException(String msg){
         super(msg);
