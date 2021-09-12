@@ -6,6 +6,7 @@ import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.apache.commons.dbutils.handlers.ColumnListHandler;
 
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -15,13 +16,15 @@ import java.util.List;
 public class MySQLManager {
     private final QueryRunner runner;
     private static MySQLManager instance = null;
+    public final EcoTableManager ecoTableManager;
 
     private MySQLManager(){
         // MySQL 8.0 +
         String driver = "com.mysql.cj.jdbc.Driver";
         DbUtils.loadDriver(driver);
         runner = new QueryRunner(getDataSource());
-        createEcoTable();
+        // TableManagers
+        ecoTableManager = new EcoTableManager(this);
     }
 
     public static MySQLManager getInstance(){
@@ -42,8 +45,13 @@ public class MySQLManager {
      * @param tClass Return object class type.
      * @param args replace "?" in SQL.
      * */
-    public<T> List<T> selectQuery(String sql, Class<T> tClass , Object... args) throws SQLException {
+    public<T> List<T> selectBeanQuery(String sql, Class<T> tClass , Object... args) throws SQLException {
         ResultSetHandler<List<T>> h = new BeanListHandler<>(tClass);
+        return runner.query(sql, h, args);
+    }
+
+    public<T> List<T> selectColumnListQuery(String sql, Class<T> tClass , Object... args) throws SQLException {
+        ResultSetHandler<List<T>> h = new ColumnListHandler<>();
         return runner.query(sql, h, args);
     }
 

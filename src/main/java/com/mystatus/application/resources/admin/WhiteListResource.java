@@ -41,7 +41,7 @@ public class WhiteListResource extends ServerResource {
             throw new CustomException("Invalid UUID.");
         }
         if(getAttribute("auth") != null) {
-            throw new CustomException("GET method do not require authentication.");
+            throw new CustomException("GET method does not require authentication.");
         }
         return isInWhiteList(null, uuid);
     }

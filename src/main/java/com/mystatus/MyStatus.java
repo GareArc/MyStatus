@@ -19,19 +19,16 @@ public class MyStatus extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        // Register Listeners
-        getServer().getPluginManager().registerEvents(new TransactionListener(), this);
-
         // ConfigHandler
         ConfigHandler.getInstance().setupConfig(this);
 
         // Server Manager
         ServerManager.getInstance().setMyPlugin(this);
 
-        // Database Load
-        MySQLManager.getInstance();
+        // DB Application
+        initDBApplication(ConfigHandler.getInstance());
 
-        getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Plugin enabled.");
+        getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "MyStatus enabled.");
         try{
             start();
         }catch (Exception e){
@@ -44,7 +41,7 @@ public class MyStatus extends JavaPlugin {
      * */
     @Override
     public void onDisable() {
-        getServer().getConsoleSender().sendMessage(ChatColor.RED + "Plugin disabled.");
+        getServer().getConsoleSender().sendMessage(ChatColor.RED + "MyStatus disabled.");
     }
 
     /**
@@ -60,5 +57,14 @@ public class MyStatus extends JavaPlugin {
 
         // Start
         component.start();
+    }
+
+    private void initDBApplication(ConfigHandler c){
+        Boolean enable = c.getBooleanConfig("DB_Enable");
+        if (enable == null || !enable) return;
+        // Load Database
+        MySQLManager.getInstance();
+        // Register Listeners
+        getServer().getPluginManager().registerEvents(new TransactionListener(), this);
     }
 }
