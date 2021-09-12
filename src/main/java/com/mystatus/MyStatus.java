@@ -3,6 +3,8 @@ package com.mystatus;
 import com.mystatus.application.RESTApplication;
 import com.mystatus.application.ServerManager;
 import com.mystatus.application.config.ConfigHandler;
+import com.mystatus.application.database.MySQLManager;
+import com.mystatus.application.listeners.TransactionListener;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.restlet.Component;
@@ -16,11 +18,18 @@ public class MyStatus extends JavaPlugin {
      * */
     @Override
     public void onEnable() {
+
+        // Register Listeners
+        getServer().getPluginManager().registerEvents(new TransactionListener(), this);
+
         // ConfigHandler
         ConfigHandler.getInstance().setupConfig(this);
 
         // Server Manager
         ServerManager.getInstance().setMyPlugin(this);
+
+        // Database Load
+        MySQLManager.getInstance();
 
         getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Plugin enabled.");
         try{
