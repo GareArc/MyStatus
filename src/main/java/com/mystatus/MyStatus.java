@@ -2,10 +2,14 @@ package com.mystatus;
 
 import com.mystatus.application.RESTApplication;
 import com.mystatus.application.ServerManager;
+import com.mystatus.application.command.CSInfoCmd;
 import com.mystatus.application.config.ConfigHandler;
 import com.mystatus.application.database.MySQLManager;
 import com.mystatus.application.listeners.TransactionListener;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.restlet.Component;
 import org.restlet.data.Protocol;
@@ -27,6 +31,9 @@ public class MyStatus extends JavaPlugin {
 
         // DB Application
         initDBApplication(ConfigHandler.getInstance());
+
+        // Cmd Application
+        initCmds();
 
         getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "MyStatus enabled.");
         try{
@@ -66,5 +73,14 @@ public class MyStatus extends JavaPlugin {
         MySQLManager.getInstance();
         // Register Listeners
         getServer().getPluginManager().registerEvents(new TransactionListener(), this);
+    }
+    private void initCmds(){
+        registerCmd("csinfo", new CSInfoCmd());
+    }
+
+    private void registerCmd(String cmdName, CommandExecutor executor){
+        PluginCommand cmd = getCommand(cmdName);
+        if(cmd == null) return;
+        cmd.setExecutor(executor);
     }
 }

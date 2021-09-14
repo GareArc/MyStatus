@@ -7,3 +7,7 @@ description: A REST api plugin.
 depend:
   - PlaceholderAPI
   - ChestShop
+commands:
+  csinfo:
+    aliases: [ csi ]
+    description: generate a CN description of your targeting chestshop sign.
