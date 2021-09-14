@@ -24,9 +24,6 @@ public class MyStatus extends JavaPlugin {
      * */
     @Override
     public void onEnable() {
-        // Register general events
-        registerEvent(new ClickShopListener());
-
         // ConfigHandler
         ConfigHandler.getInstance().setupConfig(this);
 
@@ -36,8 +33,8 @@ public class MyStatus extends JavaPlugin {
         // DB Application
         initDBApplication(ConfigHandler.getInstance());
 
-        // Cmd Application
-        initCmds();
+        // ChestShop
+        initChestShopAddons();
 
         getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "MyStatus enabled.");
         try{
@@ -59,11 +56,11 @@ public class MyStatus extends JavaPlugin {
      * Start REST application on port.
      * */
     public void start() throws Exception {
-        Component component = new Component();
         ConfigHandler configHandler = ConfigHandler.getInstance();
+        if(!configHandler.getBooleanConfig("REST_Enable")) return;
 
+        Component component = new Component();
         component.getServers().add(Protocol.HTTP, configHandler.getIntegerConfig("port"));
-
         component.getDefaultHost().attach("/" + configHandler.getStringConfig("prefix"), new RESTApplication());
 
         // Start
@@ -75,10 +72,13 @@ public class MyStatus extends JavaPlugin {
         if (enable == null || !enable) return;
         // Load Database
         MySQLManager.getInstance();
-        // Register Listeners
+        // Register listeners.
         registerEvent(new TransactionListener());
     }
-    private void initCmds(){
+
+    private void initChestShopAddons(){
+        if(!ConfigHandler.getInstance().getBooleanConfig("CS_Enable")) return;
+        registerEvent(new ClickShopListener());
         registerCmd("csinfo", new CSInfoCmd());
     }
 

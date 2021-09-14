@@ -1,12 +1,22 @@
-# Server settings
+# REST settings
+REST_Enable: false
+
 port: 7850
 prefix: api
-
-# Admin settings
 adminPass: admin
 ownerPass: owner
 
-# JDBC settings(MySQL)
+# ChestShop addons
+CS_Enable: false
+
+CS_Info_Line_1: "======= 商店信息 ======="
+CS_Info_Line_2: "拥有者: %owner%"
+CS_Info_Line_3: "物品: %item%"
+CS_Info_Line_4: "单次交易数量: %quantity%"
+CS_Info_Line_5: "购买: $%buy%; 出售: $%sell%"
+CS_Info_Line_6: "======================="
+
+# Database settings(MySQL)
 DB_Enable: false
 
 DB_Server: localhost

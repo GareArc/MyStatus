@@ -1,4 +1,4 @@
-package com.mystatus.application.resources.admin;
+package com.mystatus.application.utils;
 
 import com.mystatus.application.config.ConfigHandler;
 
