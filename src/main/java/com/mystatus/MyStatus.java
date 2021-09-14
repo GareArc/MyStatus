@@ -5,10 +5,12 @@ import com.mystatus.application.ServerManager;
 import com.mystatus.application.command.CSInfoCmd;
 import com.mystatus.application.config.ConfigHandler;
 import com.mystatus.application.database.MySQLManager;
+import com.mystatus.application.listeners.ClickShopListener;
 import com.mystatus.application.listeners.TransactionListener;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.event.Listener;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.restlet.Component;
@@ -22,6 +24,8 @@ public class MyStatus extends JavaPlugin {
      * */
     @Override
     public void onEnable() {
+        // Register general events
+        registerEvent(new ClickShopListener());
 
         // ConfigHandler
         ConfigHandler.getInstance().setupConfig(this);
@@ -72,7 +76,7 @@ public class MyStatus extends JavaPlugin {
         // Load Database
         MySQLManager.getInstance();
         // Register Listeners
-        getServer().getPluginManager().registerEvents(new TransactionListener(), this);
+        registerEvent(new TransactionListener());
     }
     private void initCmds(){
         registerCmd("csinfo", new CSInfoCmd());
@@ -82,5 +86,9 @@ public class MyStatus extends JavaPlugin {
         PluginCommand cmd = getCommand(cmdName);
         if(cmd == null) return;
         cmd.setExecutor(executor);
+    }
+
+    private void registerEvent(Listener l){
+        getServer().getPluginManager().registerEvents(l, this);
     }
 }

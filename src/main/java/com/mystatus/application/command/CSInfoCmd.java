@@ -1,6 +1,7 @@
 package com.mystatus.application.command;
 
 import com.Acrobot.ChestShop.Signs.ChestShopSign;
+import com.Acrobot.ChestShop.Utils.uBlock;
 import com.mystatus.application.utils.CSUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -20,7 +21,6 @@ public class CSInfoCmd implements CommandExecutor {
         Block b = sender.getTargetBlock(null, 10);
         if(!ChestShopSign.isValid(b)) return false;
         String[] lines = ((Sign)b.getState()).getLines();
-
         sender.sendMessage(ChatColor.DARK_GREEN + CSUtils.getInstance().parseShopSign(lines));
         return true;
     }
